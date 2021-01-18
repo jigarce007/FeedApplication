@@ -17,8 +17,37 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        getFeeds(loadJSONFromAsset())
+
+        rv_feed.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
+        rv_feed.adapter = FeedAdapter(this,feeds)
+
+    }
+
+    //TO LOAD JSON FROM ASSETS
+    private fun loadJSONFromAsset(): String {
+        val json: String?
         try {
-            val obj = JSONObject(loadJSONFromAsset())
+
+            val inputStream = assets.open("data.json")
+            val size = inputStream.available()
+            val buffer = ByteArray(size)
+            val charset: Charset = Charsets.UTF_8
+            inputStream.read(buffer)
+            inputStream.close()
+            json = String(buffer, charset)
+        }
+        catch (ex: IOException) {
+            ex.printStackTrace()
+            return ""
+        }
+        return json
+    }
+
+
+    fun getFeeds(feedsJSON : String) {
+        try {
+            val obj = JSONObject(feedsJSON)
             val rowList = obj.getJSONArray("rows")
             for (i in 0 until rowList.length()) {
                 val feedDetail = rowList.getJSONObject(i)
@@ -35,29 +64,5 @@ class MainActivity : AppCompatActivity() {
             e.printStackTrace()
         }
 
-        rv_feed.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
-        rv_feed.adapter = FeedAdapter(this,feeds)
-
-
-
-    }
-
-    //TO LOAD JSON FROM ASSETS
-    private fun loadJSONFromAsset(): String {
-        val json: String?
-        try {
-            val inputStream = assets.open("data.json")
-            val size = inputStream.available()
-            val buffer = ByteArray(size)
-            val charset: Charset = Charsets.UTF_8
-            inputStream.read(buffer)
-            inputStream.close()
-            json = String(buffer, charset)
-        }
-        catch (ex: IOException) {
-            ex.printStackTrace()
-            return ""
-        }
-        return json
     }
 }

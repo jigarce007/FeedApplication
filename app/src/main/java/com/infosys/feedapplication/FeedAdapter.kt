@@ -11,8 +11,11 @@ import com.bumptech.glide.Glide
 import com.infosys.feedapplication.Model.Feed
 import kotlinx.android.synthetic.main.list_item.view.*
 
-class FeedAdapter(val ctx:Context, var list: ArrayList<Feed>):RecyclerView.Adapter<FeedAdapter.FeedHolder>(){
+class FeedAdapter(val ctx:Context, var feedList: ArrayList<Feed>):RecyclerView.Adapter<FeedAdapter.FeedHolder>(){
 lateinit var cv : FeedHolder
+
+
+
     class FeedHolder(view:View):RecyclerView.ViewHolder(view){
         var tv_title : TextView =view.tv_title
         var tv_description : TextView = view.tv_description
@@ -30,7 +33,7 @@ lateinit var cv : FeedHolder
 
     override fun getItemCount(): Int {
 
-        return list.size
+        return feedList.size
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -38,9 +41,10 @@ lateinit var cv : FeedHolder
     }
 
     override fun onBindViewHolder(holder: FeedHolder, position: Int) {
-       cv.tv_title.text = list[position].title
-        cv.tv_description.text = list[position].description
-        val thumb = list[position].thumb
+
+       cv.tv_title.text = feedList[position].title
+        cv.tv_description.text = feedList[position].description
+        val thumb = feedList[position].thumb
         if (thumb !== null) {
             Glide.with(ctx)
                 .load(thumb)
